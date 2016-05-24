@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Compair</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+</head>
+
+<body class="bgcolor">
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Compair</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="#">Trends</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+              <li><a href="#"><i class="glyphicon glyphicon-user getright"></i></a></li>
+
+            </ul>
+          </div>
+      </nav>
+  </br>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <div class="col-sm-4 col-md-6 animated flipInX">
+                <div class="thumbnail first-comparison" id="firstComparison">
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-6 animated flipInX">
+                <div class="thumbnail second-comparison" id="secondComparison">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</br>
+     <div class="col-lg-12 text-center">
+        <a href="#" class="btn btn-default" role="button" onclick="record(this)">I'm not sure</a>
+    </div>
+
+    <div class="col-lg-12 text-center" id="results">
+   </div>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/lodash.js"></script>
+    <script src="js/bundle.js"></script>
+</body>
+
+</html>

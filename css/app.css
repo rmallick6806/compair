@@ -1,0 +1,15 @@
+.thumbnail {
+	border-radius: 0;
+}
+
+.thumbnail:hover {
+
+}
+
+.thumbnail:active {
+	opacity: 0.4;
+}
+
+.thumbnail img {
+	object-fit: contain;
+}
