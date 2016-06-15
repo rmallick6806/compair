@@ -1,8 +1,8 @@
 module.exports = function show() {
 	var db = firebase.database();
 
-	db.ref('/').once('value').then(function(snapshot) {
-		var group = _.sample(snapshot.val());
+	var render = function(data) {
+		var group = _.sample(data);
 
 		_.forEach(group, function(competitors, i) {
 			var companies = Object.keys(competitors);
@@ -15,5 +15,9 @@ module.exports = function show() {
 			$("<h4>").text(companies[1] + ': ' + secondCoVal).appendTo("#" + id);
 
 		});
+	};
+	
+	db.ref('/').once('value').then(function(snapshot) {
+		render(snapshot.val());
 	});
 };
