@@ -13,3 +13,14 @@
 .thumbnail img {
 	object-fit: contain;
 }
+
+#results {
+	margin-top: 20px;
+}
+
+.comparison-renders {
+	border: 1px solid #DDDDDD;
+  width: 30%;
+  display: inline-block;
+  margin-right: 10px;
+}

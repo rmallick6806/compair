@@ -1,11 +1,13 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var init = require('./init').init;
 var process = require('./process').process;
+var show = require('./show');
 
 init();
 process();
+show();
 
-},{"./init":3,"./process":4}],2:[function(require,module,exports){
+},{"./init":3,"./process":4,"./show":5}],2:[function(require,module,exports){
 var data = [
   {
     logo: './image/apple_logo.jpg',
@@ -172,6 +174,15 @@ var data = [
 module.exports = data;
 },{}],3:[function(require,module,exports){
 var init = function() {
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAZF-kcVUR4l8B-IRGgxMxHUO870hpHRtc",
+    authDomain: "compair-60214.firebaseapp.com",
+    databaseURL: "https://compair-60214.firebaseio.com",
+    storageBucket: "compair-60214.appspot.com",
+  };
+  firebase.initializeApp(config);
+
   Array.prototype.randomElement = function() {
     return this[Math.floor(Math.random() * this.length)]
   }
@@ -213,32 +224,25 @@ var process = function() {
 	  $("<img>").attr("src", productTwo.logo).attr("name", productTwo.name).appendTo("#secondComparison");
 	}
 
-	var record = function(el) {
-	  var chosen = el.childNodes[1].name;
-	  var loser = (chosen === productOne.name) ? productTwo.name : productOne.name;
+	var record = function(el, skip) {
+		if (!skip) {
+			var chosen = el.childNodes[1].name;
+			var loser = (chosen === productOne.name) ? productTwo.name : productOne.name;
+			function transactData(db, chosen, loser) {
+				var sortArr = [chosen, loser].sort();
+				var comparisonRef = db.ref(type + '/' + sortArr[0] + '-' + sortArr[1] + '/' + chosen);
 
-	  function transactData(db, chosen, loser) {
-	    var sortArr = [chosen, loser].sort();
-	    var comparisonRef = db.ref(type + '/' + sortArr[0] + '-' + sortArr[1] + '/' + chosen);
-
-	    comparisonRef.transaction(function(rank) {
-	      return rank + 1;
-	    }, function(error, committed, snapshot) {
-	      if (error) {
-	        console.log('Transaction failed abnormally!', error);
-	      } else if (!committed) {
-	        console.log('apparantly it exists');
-	      } else if (committed) {
-	        console.log('data comitted');
-	      } else {
-	        console.log('data added!');
-	      }
-	      console.log('Chosen: ', chosen, snapshot.val(), 'and loser: ', loser);
-	    });
-	  }
-
-	  transactData(db, chosen, loser);
-
+				comparisonRef.transaction(function(rank) {
+					return rank + 1;
+				}, function(error, committed, snapshot) {
+					if (error) {
+						console.log('Transaction failed abnormally!', error);
+					}
+					console.log('Chosen: ', chosen, snapshot.val(), 'and loser: ', loser);
+				});
+			}
+			transactData(db, chosen, loser);
+		}
 	  $("img").remove()
 		//$("<h4>").text(chosen).appendTo("#results");
 	  populate();
@@ -247,13 +251,35 @@ var process = function() {
 	populate();
 	document.getElementById("firstComparison").addEventListener("click", function() {record(this);}, false);
 	document.getElementById("secondComparison").addEventListener("click", function() {record(this);}, false);
+	document.getElementById("notSure").addEventListener("click", function() {record(this, true);}, false);
 }
 
 module.exports = {
 	process
 }
 
-},{"./data.js":2,"./utils":5}],5:[function(require,module,exports){
+},{"./data.js":2,"./utils":6}],5:[function(require,module,exports){
+module.exports = function show() {
+	var db = firebase.database();
+
+	db.ref('/').once('value').then(function(snapshot) {
+		var group = _.sample(snapshot.val());
+
+		_.forEach(group, function(competitors, i) {
+			var companies = Object.keys(competitors);
+			var firstCoVal = competitors[companies[0]];
+			var secondCoVal = competitors[companies[1]];
+			var id = _.kebabCase(['brands', companies[0], companies[1]].join(''));
+
+			$("<div>").attr('id', id).attr('class', 'comparison-renders').appendTo("#results");
+			$("<h4>").text(companies[0] + ': ' + firstCoVal).appendTo("#" + id);
+			$("<h4>").text(companies[1] + ': ' + secondCoVal).appendTo("#" + id);
+
+		});
+	});
+};
+
+},{}],6:[function(require,module,exports){
 var generateAssociatedData = function(data) {
   var sortedData = {};
   _.map(data, function(obj, i) {

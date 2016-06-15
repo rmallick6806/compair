@@ -29,32 +29,25 @@ var process = function() {
 	  $("<img>").attr("src", productTwo.logo).attr("name", productTwo.name).appendTo("#secondComparison");
 	}
 
-	var record = function(el) {
-	  var chosen = el.childNodes[1].name;
-	  var loser = (chosen === productOne.name) ? productTwo.name : productOne.name;
+	var record = function(el, skip) {
+		if (!skip) {
+			var chosen = el.childNodes[1].name;
+			var loser = (chosen === productOne.name) ? productTwo.name : productOne.name;
+			function transactData(db, chosen, loser) {
+				var sortArr = [chosen, loser].sort();
+				var comparisonRef = db.ref(type + '/' + sortArr[0] + '-' + sortArr[1] + '/' + chosen);
 
-	  function transactData(db, chosen, loser) {
-	    var sortArr = [chosen, loser].sort();
-	    var comparisonRef = db.ref(type + '/' + sortArr[0] + '-' + sortArr[1] + '/' + chosen);
-
-	    comparisonRef.transaction(function(rank) {
-	      return rank + 1;
-	    }, function(error, committed, snapshot) {
-	      if (error) {
-	        console.log('Transaction failed abnormally!', error);
-	      } else if (!committed) {
-	        console.log('apparantly it exists');
-	      } else if (committed) {
-	        console.log('data comitted');
-	      } else {
-	        console.log('data added!');
-	      }
-	      console.log('Chosen: ', chosen, snapshot.val(), 'and loser: ', loser);
-	    });
-	  }
-
-	  transactData(db, chosen, loser);
-
+				comparisonRef.transaction(function(rank) {
+					return rank + 1;
+				}, function(error, committed, snapshot) {
+					if (error) {
+						console.log('Transaction failed abnormally!', error);
+					}
+					console.log('Chosen: ', chosen, snapshot.val(), 'and loser: ', loser);
+				});
+			}
+			transactData(db, chosen, loser);
+		}
 	  $("img").remove()
 		//$("<h4>").text(chosen).appendTo("#results");
 	  populate();
@@ -63,6 +56,7 @@ var process = function() {
 	populate();
 	document.getElementById("firstComparison").addEventListener("click", function() {record(this);}, false);
 	document.getElementById("secondComparison").addEventListener("click", function() {record(this);}, false);
+	document.getElementById("notSure").addEventListener("click", function() {record(this, true);}, false);
 }
 
 module.exports = {
