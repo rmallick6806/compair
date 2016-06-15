@@ -3,7 +3,7 @@ module.exports = function show() {
 
 	var render = function(data) {
 		var group = _.sample(data);
-
+		$(".comparison-renders").remove();
 		_.forEach(group, function(competitors, i) {
 			var companies = Object.keys(competitors);
 			var firstCoVal = competitors[companies[0]];
@@ -16,8 +16,10 @@ module.exports = function show() {
 
 		});
 	};
-	
+
 	db.ref('/').once('value').then(function(snapshot) {
 		render(snapshot.val());
 	});
+
+	document.getElementById("moreResults").addEventListener("click", function() {show(this);}, false);
 };
