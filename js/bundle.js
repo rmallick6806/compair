@@ -231,7 +231,6 @@ var process = function() {
 			function transactData(db, chosen, loser) {
 				var sortArr = [chosen, loser].sort();
 				var comparisonRef = db.ref(type + '/' + sortArr[0] + '-' + sortArr[1] + '/' + chosen);
-
 				comparisonRef.transaction(function(rank) {
 					return rank + 1;
 				}, function(error, committed, snapshot) {
@@ -267,8 +266,8 @@ module.exports = function show() {
 		$(".comparison-renders").remove();
 		_.forEach(group, function(competitors, i) {
 			var companies = Object.keys(competitors);
-			var firstCoVal = competitors[companies[0]];
-			var secondCoVal = competitors[companies[1]];
+			var firstCoVal = competitors[companies[0]] || 0;
+			var secondCoVal = competitors[companies[1]] || 0;
 			var id = _.kebabCase(['brands', companies[0], companies[1]].join(''));
 
 			$("<div>").attr('id', id).attr('class', 'comparison-renders').appendTo("#results");

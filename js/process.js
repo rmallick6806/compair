@@ -36,7 +36,6 @@ var process = function() {
 			function transactData(db, chosen, loser) {
 				var sortArr = [chosen, loser].sort();
 				var comparisonRef = db.ref(type + '/' + sortArr[0] + '-' + sortArr[1] + '/' + chosen);
-
 				comparisonRef.transaction(function(rank) {
 					return rank + 1;
 				}, function(error, committed, snapshot) {
