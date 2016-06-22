@@ -280,8 +280,6 @@ module.exports = function show() {
 	db.ref('/').once('value').then(function(snapshot) {
 		render(snapshot.val());
 	});
-
-	document.getElementById("moreResults").addEventListener("click", function() {show(this);}, false);
 };
 
 },{}],6:[function(require,module,exports){
